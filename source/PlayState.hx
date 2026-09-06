@@ -519,49 +519,37 @@ var rightPressed:Bool = false;
 		scoreTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
 	#if mobile
-// cria botões invisíveis exatamente sobre as sprites de hitbox para capturar toques
-leftButton = new FlxButton(leftHitbox.x, leftHitbox.y, null, function(?b:FlxButton) {});
+// cria botões invisíveis exatamente sobre as sprites de hitbox para capturar toques (apenas para clicks)
+leftButton = new FlxButton(leftHitbox.x, leftHitbox.y, "", function() { });
 leftButton.width = leftHitbox.width;
 leftButton.height = leftHitbox.height;
-if (leftButton.label != null) leftButton.label.set_text("");
 leftButton.alpha = 0.0;
 leftButton.cameras = [camOther];
 leftButton.scrollFactor.set(0, 0);
-leftButton.onDown = function(?b:FlxButton) { leftPressed = true; };
-leftButton.onUp = function(?b:FlxButton) { leftPressed = false; };
 add(leftButton);
 
-downButton = new FlxButton(downHitbox.x, downHitbox.y, null, function(?b:FlxButton) {});
+downButton = new FlxButton(downHitbox.x, downHitbox.y, "", function() { });
 downButton.width = downHitbox.width;
 downButton.height = downHitbox.height;
-if (downButton.label != null) downButton.label.set_text("");
 downButton.alpha = 0.0;
 downButton.cameras = [camOther];
 downButton.scrollFactor.set(0, 0);
-downButton.onDown = function(?b:FlxButton) { downPressed = true; };
-downButton.onUp = function(?b:FlxButton) { downPressed = false; };
 add(downButton);
 
-upButton = new FlxButton(upHitbox.x, upHitbox.y, null, function(?b:FlxButton) {});
+upButton = new FlxButton(upHitbox.x, upHitbox.y, "", function() { });
 upButton.width = upHitbox.width;
 upButton.height = upHitbox.height;
-if (upButton.label != null) upButton.label.set_text("");
 upButton.alpha = 0.0;
 upButton.cameras = [camOther];
 upButton.scrollFactor.set(0, 0);
-upButton.onDown = function(?b:FlxButton) { upPressed = true; };
-upButton.onUp = function(?b:FlxButton) { upPressed = false; };
 add(upButton);
 
-rightButton = new FlxButton(rightHitbox.x, rightHitbox.y, null, function(?b:FlxButton) {});
+rightButton = new FlxButton(rightHitbox.x, rightHitbox.y, "", function() { });
 rightButton.width = rightHitbox.width;
 rightButton.height = rightHitbox.height;
-if (rightButton.label != null) rightButton.label.set_text("");
 rightButton.alpha = 0.0;
 rightButton.cameras = [camOther];
 rightButton.scrollFactor.set(0, 0);
-rightButton.onDown = function(?b:FlxButton) { rightPressed = true; };
-rightButton.onUp = function(?b:FlxButton) { rightPressed = false; };
 add(rightButton);
 #end
 	
@@ -905,7 +893,45 @@ add(rightButton);
 		#end
 
 		#if mobile
-// as flags agora são controladas pelos FlxButton onDown/onUp; atualiza a aparência das hitboxes
+// usa FlxG.pointers para suportar multi-touch e detectar hold; atualiza as flags que o resto do jogo usa
+leftPressed = false;
+downPressed = false;
+upPressed = false;
+rightPressed = false;
+
+for (pointer in FlxG.pointers.list)
+{
+    if (!pointer.pressed) continue;
+
+    var tx = pointer.x - 150;
+    var ty = pointer.y;
+
+    // LEFT
+    if (tx >= leftHitbox.x && tx <= leftHitbox.x + leftHitbox.width)
+    {
+        leftPressed = true;
+    }
+
+    // DOWN
+    if (tx >= downHitbox.x && tx <= downHitbox.x + downHitbox.width)
+    {
+        downPressed = true;
+    }
+
+    // UP
+    if (tx >= upHitbox.x && tx <= upHitbox.x + upHitbox.width)
+    {
+        upPressed = true;
+    }
+
+    // RIGHT
+    if (tx >= rightHitbox.x && tx <= rightHitbox.x + rightHitbox.width)
+    {
+        rightPressed = true;
+    }
+}
+
+// atualiza a aparência das hitboxes conforme o estado das flags (mantém aparência anterior)
 leftHitbox.alpha = leftPressed ? 0.35 : 0.2;
 downHitbox.alpha = downPressed ? 0.35 : 0.2;
 upHitbox.alpha = upPressed ? 0.35 : 0.2;
