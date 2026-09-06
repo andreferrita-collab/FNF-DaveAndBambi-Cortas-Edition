@@ -905,51 +905,11 @@ add(rightButton);
 		#end
 
 		#if mobile
-
-leftPressed = false;
-downPressed = false;
-upPressed = false;
-rightPressed = false;
-
-leftHitbox.alpha = 0.2;
-downHitbox.alpha = 0.2;
-upHitbox.alpha = 0.2;
-rightHitbox.alpha = 0.2;
-
-for (touch in FlxG.touches.list)
-{
-	var tx = touch.x - 150;
-	var ty = touch.y;
-
-	// LEFT
-	if (tx >= leftHitbox.x && tx <= leftHitbox.x + leftHitbox.width)
-	{
-		leftPressed = true;
-		leftHitbox.alpha = 0.35;
-	}
-
-	// DOWN
-	if (tx >= downHitbox.x && tx <= downHitbox.x + downHitbox.width)
-	{
-		downPressed = true;
-		downHitbox.alpha = 0.35;
-	}
-
-	// UP
-	if (tx >= upHitbox.x && tx <= upHitbox.x + upHitbox.width)
-	{
-		upPressed = true;
-		upHitbox.alpha = 0.35;
-	}
-
-	// RIGHT
-	if (tx >= rightHitbox.x && tx <= rightHitbox.x + rightHitbox.width)
-	{
-		rightPressed = true;
-		rightHitbox.alpha = 0.35;
-	}
-}
-
+// as flags agora são controladas pelos FlxButton onDown/onUp; atualiza a aparência das hitboxes
+leftHitbox.alpha = leftPressed ? 0.35 : 0.2;
+downHitbox.alpha = downPressed ? 0.35 : 0.2;
+upHitbox.alpha = upPressed ? 0.35 : 0.2;
+rightHitbox.alpha = rightPressed ? 0.35 : 0.2;
 #end
 	    if (SONG.song.toLowerCase() == 'photosynthesis')
        {
