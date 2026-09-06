@@ -15,8 +15,8 @@ class Paths
             case "androidcontrols/hitbox":
                 // Ajuste estes nomes se o seu AssetPaths gerou chaves diferentes
                 return FlxAtlasFrames.fromSparrow(
-                    AssetPaths.androidcontrols_hitbox__png,
-                    AssetPaths.androidcontrols_hitbox__xml
+                    "assets/androidcontrols/hitbox.png",
+                    "assets/androidcontrols/hitbox.xml"
                 );
             // Adicione outros casos aqui conforme necessário
             default:
