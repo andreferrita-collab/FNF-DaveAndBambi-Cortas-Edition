@@ -37,6 +37,7 @@ import openfl.filters.ShaderFilter;
 #if mobile
 import flixel.ui.FlxButton;
 import flixel.math.FlxRect;
+import flixel.input.touch.FlxTouch;
 #end
 	
 using StringTools;
@@ -893,18 +894,19 @@ add(rightButton);
 		#end
 
 		#if mobile
-// usa FlxG.pointers para suportar multi-touch e detectar hold; atualiza as flags que o resto do jogo usa
 leftPressed = false;
 downPressed = false;
 upPressed = false;
 rightPressed = false;
 
-for (pointer in FlxG.pointers.list)
+// percorre os toques atuais (compatível com versões que expõem FlxG.touches.list)
+for (i in 0...FlxG.touches.list.length)
 {
-    if (!pointer.pressed) continue;
+    var touch:FlxTouch = cast FlxG.touches.list[i];
+    if (!touch.pressed) continue;
 
-    var tx = pointer.x - 150;
-    var ty = pointer.y;
+    var tx = touch.x - 150;
+    var ty = touch.y;
 
     // LEFT
     if (tx >= leftHitbox.x && tx <= leftHitbox.x + leftHitbox.width)
@@ -931,7 +933,7 @@ for (pointer in FlxG.pointers.list)
     }
 }
 
-// atualiza a aparência das hitboxes conforme o estado das flags (mantém aparência anterior)
+// atualiza aparência das hitboxes sem alterar comportamento de zoom
 leftHitbox.alpha = leftPressed ? 0.35 : 0.2;
 downHitbox.alpha = downPressed ? 0.35 : 0.2;
 upHitbox.alpha = upPressed ? 0.35 : 0.2;
