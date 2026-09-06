@@ -35,10 +35,10 @@ import openfl.display.BlendMode;
 import openfl.filters.ShaderFilter;
 
 #if mobile
-import flixel.input.touch.FlxTouch;
+import flixel.ui.FlxButton;
 import flixel.math.FlxRect;
 #end
-
+	
 using StringTools;
 
 class PlayState extends MusicBeatState
