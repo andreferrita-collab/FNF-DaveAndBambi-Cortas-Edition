@@ -35,9 +35,7 @@ import openfl.display.BlendMode;
 import openfl.filters.ShaderFilter;
 
 #if mobile
-import flixel.ui.FlxButton;
-import flixel.math.FlxRect;
-import flixel.input.touch.FlxTouch;
+import android.FlxHitbox;
 #end
 	
 using StringTools;
@@ -56,21 +54,8 @@ class PlayState extends MusicBeatState
 	var shader:WiggleEffect;
 	
 	#if mobile
-    var leftHitbox:FlxSprite;
-    var downHitbox:FlxSprite;
-var upHitbox:FlxSprite;
-var rightHitbox:FlxSprite;
-
-var leftButton:FlxButton;
-var downButton:FlxButton;
-var upButton:FlxButton;
-var rightButton:FlxButton;
-
-var leftPressed:Bool = false;
-var downPressed:Bool = false;
-var upPressed:Bool = false;
-var rightPressed:Bool = false;
-#end
+    var touchHitboxes:FlxHitbox;
+    #end
 
 	private var vocals:FlxSound;
 
@@ -95,7 +80,7 @@ var rightPressed:Bool = false;
 	private var curSong:String = "";
 
 	private var gfSpeed:Int = 1;
-	private var health:Float = 1;
+	private var healtFloat = 1;
 	private var combo:Int = 0;
 
 	private var healthBarBG:FlxSprite;
@@ -521,52 +506,27 @@ var rightPressed:Bool = false;
 		doof.cameras = [camHUD];
 	#if mobile
 // safety: só cria botões se as hitboxes existirem e camOther estiver pronto
-if (camOther == null) trace("PlayState: camOther == null");
-if (leftHitbox == null) trace("PlayState: leftHitbox == null");
+// cria e adiciona o grupo visual de hitboxes (mantém os hitbox "originais" para a lógica)
+touchHitboxes = new FlxHitbox(0.75, true);
+add(touchHitboxes);
 
-if (leftHitbox != null && camOther != null)
+// força os botões/child sprites do FlxHitbox a usarem a mesma câmera HUD (camOther) e coordenadas de tela
+var cams = [camOther];
+if (touchHitboxes.hitbox != null)
 {
-    leftButton = new FlxButton(leftHitbox.x, leftHitbox.y, "", function() {});
-    leftButton.width = leftHitbox.width;
-    leftButton.height = leftHitbox.height;
-    leftButton.alpha = 0.0;
-    leftButton.cameras = [camOther];
-    leftButton.scrollFactor.set(0, 0);
-    add(leftButton);
+    for (i in 0...touchHitboxes.hitbox.members.length)
+    {
+        var child = touchHitboxes.hitbox.members[i];
+        if (child != null)
+        {
+            child.cameras = cams;
+            child.scrollFactor.set(0, 0);
+        }
+    }
 }
 
-if (downHitbox != null && camOther != null)
-{
-    downButton = new FlxButton(downHitbox.x, downHitbox.y, "", function() {});
-    downButton.width = downHitbox.width;
-    downButton.height = downHitbox.height;
-    downButton.alpha = 0.0;
-    downButton.cameras = [camOther];
-    downButton.scrollFactor.set(0, 0);
-    add(downButton);
-}
-
-if (upHitbox != null && camOther != null)
-{
-    upButton = new FlxButton(upHitbox.x, upHitbox.y, "", function() {});
-    upButton.width = upHitbox.width;
-    upButton.height = upHitbox.height;
-    upButton.alpha = 0.0;
-    upButton.cameras = [camOther];
-    upButton.scrollFactor.set(0, 0);
-    add(upButton);
-}
-
-if (rightHitbox != null && camOther != null)
-{
-    rightButton = new FlxButton(rightHitbox.x, rightHitbox.y, "", function() {});
-    rightButton.width = rightHitbox.width;
-    rightButton.height = rightHitbox.height;
-    rightButton.alpha = 0.0;
-    rightButton.cameras = [camOther];
-    rightButton.scrollFactor.set(0, 0);
-    add(rightButton);
-}
+// opcional: se a sua FlxHitbox adicionou mais sprites fora de hitbox (hint etc.) e não expôs referência,
+// verifique visualmente; se precisar eu adapto a classe para expor hint como campo.
 #end
 	
 	if (SONG.song.toLowerCase() == 'taimuresu'){
@@ -909,73 +869,11 @@ if (rightHitbox != null && camOther != null)
 		#end
 
 		#if mobile
-// reset flags
-leftPressed = false;
-downPressed = false;
-upPressed = false;
-rightPressed = false;
-
-// sincroniza botões com as hitboxes se existirem (evita acessar null)
-if (leftButton != null && leftHitbox != null)
-{
-    leftButton.x = leftHitbox.x;
-    leftButton.y = leftHitbox.y;
-    leftButton.width = leftHitbox.width;
-    leftButton.height = leftHitbox.height;
-}
-if (downButton != null && downHitbox != null)
-{
-    downButton.x = downHitbox.x;
-    downButton.y = downHitbox.y;
-    downButton.width = downHitbox.width;
-    downButton.height = downHitbox.height;
-}
-if (upButton != null && upHitbox != null)
-{
-    upButton.x = upHitbox.x;
-    upButton.y = upHitbox.y;
-    upButton.width = upHitbox.width;
-    upButton.height = upHitbox.height;
-}
-if (rightButton != null && rightHitbox != null)
-{
-    rightButton.x = rightHitbox.x;
-    rightButton.y = rightHitbox.y;
-    rightButton.width = rightHitbox.width;
-    rightButton.height = rightHitbox.height;
-}
-
-// percorre toques com checagens nulas
-if (FlxG.touches != null && FlxG.touches.list != null)
-{
-    for (i in 0...FlxG.touches.list.length)
-    {
-        var t = FlxG.touches.list[i];
-        if (t == null) continue;
-        // dependendo da versão, 'pressed' pode não existir; checar com reflect se necessário
-        if (!Reflect.hasField(t, "pressed") || !t.pressed) continue;
-
-        var tx = t.x - 150;
-        var ty = t.y;
-
-        if (leftHitbox != null && tx >= leftHitbox.x && tx <= leftHitbox.x + leftHitbox.width) leftPressed = true;
-        if (downHitbox != null && tx >= downHitbox.x && tx <= downHitbox.x + downHitbox.width) downPressed = true;
-        if (upHitbox != null && tx >= upHitbox.x && tx <= upHitbox.x + upHitbox.width) upPressed = true;
-        if (rightHitbox != null && tx >= rightHitbox.x && tx <= rightHitbox.x + rightHitbox.width) rightPressed = true;
-    }
-}
-else
-{
-    trace("PlayState: FlxG.touches or list == null");
-}
-
-// atualiza aparência das hitboxes
-if (leftHitbox != null) leftHitbox.alpha = leftPressed ? 0.35 : 0.2;
-if (downHitbox != null) downHitbox.alpha = downPressed ? 0.35 : 0.2;
-if (upHitbox != null) upHitbox.alpha = upPressed ? 0.35 : 0.2;
-if (rightHitbox != null) rightHitbox.alpha = rightPressed ? 0.35 : 0.2;
+if (touchHitboxes != null)
+    touchHitboxes.setPressedStates(leftPressed, downPressed, upPressed, rightPressed);
 #end
-	    if (SONG.song.toLowerCase() == 'photosynthesis')
+
+       if(SONG.song.toLowerCase() == 'photosynthesis')
        {
 	    dad.y = 200 + Math.sin(Conductor.songPosition / 500) * 20;
 	   }else if (SONG.song.toLowerCase() == 'delirium')
