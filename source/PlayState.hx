@@ -55,6 +55,11 @@ class PlayState extends MusicBeatState
 	
 	#if mobile
     var touchHitboxes:FlxHitbox;
+
+	var leftPressed:Bool = false;
+	var downPressed:Bool = false;
+	var upPressed:Bool = false;
+	var rightPressed:Bool = false;
     #end
 
 	private var vocals:FlxSound;
