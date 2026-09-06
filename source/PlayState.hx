@@ -519,42 +519,52 @@ var rightPressed:Bool = false;
 		scoreTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
 	#if mobile
+// cria botões invisíveis exatamente sobre as sprites de hitbox para capturar toques
+leftButton = new FlxButton(leftHitbox.x, leftHitbox.y, null, function(?b:FlxButton) {});
+leftButton.width = leftHitbox.width;
+leftButton.height = leftHitbox.height;
+if (leftButton.label != null) leftButton.label.set_text("");
+leftButton.alpha = 0.0;
+leftButton.cameras = [camOther];
+leftButton.scrollFactor.set(0, 0);
+leftButton.onDown = function(?b:FlxButton) { leftPressed = true; };
+leftButton.onUp = function(?b:FlxButton) { leftPressed = false; };
+add(leftButton);
 
-var hitboxWidth:Int = Std.int(FlxG.width / 4);
+downButton = new FlxButton(downHitbox.x, downHitbox.y, null, function(?b:FlxButton) {});
+downButton.width = downHitbox.width;
+downButton.height = downHitbox.height;
+if (downButton.label != null) downButton.label.set_text("");
+downButton.alpha = 0.0;
+downButton.cameras = [camOther];
+downButton.scrollFactor.set(0, 0);
+downButton.onDown = function(?b:FlxButton) { downPressed = true; };
+downButton.onUp = function(?b:FlxButton) { downPressed = false; };
+add(downButton);
 
-// LEFT
-leftHitbox = new FlxSprite(0, 0);
-leftHitbox.makeGraphic(hitboxWidth, FlxG.height, 0x44C24B99);
-leftHitbox.alpha = 0.25;
-leftHitbox.cameras = [camOther];
-add(leftHitbox);
+upButton = new FlxButton(upHitbox.x, upHitbox.y, null, function(?b:FlxButton) {});
+upButton.width = upHitbox.width;
+upButton.height = upHitbox.height;
+if (upButton.label != null) upButton.label.set_text("");
+upButton.alpha = 0.0;
+upButton.cameras = [camOther];
+upButton.scrollFactor.set(0, 0);
+upButton.onDown = function(?b:FlxButton) { upPressed = true; };
+upButton.onUp = function(?b:FlxButton) { upPressed = false; };
+add(upButton);
 
-// DOWN
-downHitbox = new FlxSprite(hitboxWidth, 0);
-downHitbox.makeGraphic(hitboxWidth, FlxG.height, 0x4400FFFF);
-downHitbox.alpha = 0.25;
-downHitbox.cameras = [camOther];
-add(downHitbox);
-
-// UP
-upHitbox = new FlxSprite(hitboxWidth * 2, 0);
-upHitbox.makeGraphic(hitboxWidth, FlxG.height, 0x4412FA05);
-upHitbox.alpha = 0.25;
-upHitbox.cameras = [camOther];
-add(upHitbox);
-
-// RIGHT
-rightHitbox = new FlxSprite(hitboxWidth * 3, 0);
-rightHitbox.makeGraphic(hitboxWidth, FlxG.height, 0x44F9393F);
-rightHitbox.alpha = 0.25;
-rightHitbox.cameras = [camOther];
-add(rightHitbox);
-leftHitbox.scrollFactor.set(0, 0);
-downHitbox.scrollFactor.set(0, 0);
-upHitbox.scrollFactor.set(0, 0);
-rightHitbox.scrollFactor.set(0, 0);
-
+rightButton = new FlxButton(rightHitbox.x, rightHitbox.y, null, function(?b:FlxButton) {});
+rightButton.width = rightHitbox.width;
+rightButton.height = rightHitbox.height;
+if (rightButton.label != null) rightButton.label.set_text("");
+rightButton.alpha = 0.0;
+rightButton.cameras = [camOther];
+rightButton.scrollFactor.set(0, 0);
+rightButton.onDown = function(?b:FlxButton) { rightPressed = true; };
+rightButton.onUp = function(?b:FlxButton) { rightPressed = false; };
+add(rightButton);
 #end
+	
 	if (SONG.song.toLowerCase() == 'taimuresu'){
 		AlertMessage.show("i will kill you...", "the finale...");
 		BlackFade.addBlackFade(this, camHUD, 10);
