@@ -32,6 +32,14 @@ class FlxHitbox extends FlxSpriteGroup {
 		buttonRight = new FlxButton(0, 0);
 
 		hitbox = new FlxSpriteGroup();
+
+		// CRIA PRIMEIRO O HINT (para ficar ATRÁS)
+		var hitbox_hint:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('androidcontrols/hitbox'));
+		hitbox_hint.antialiasing = orgAntialiasing;
+		hitbox_hint.alpha = orgAlpha;
+		hitbox_hint.scrollFactor.set(0, 0);
+		add(hitbox_hint);
+
 		// cria os botões (visuais). NÃO usa callbacks internos — a lógica de input fica no PlayState.
 		buttonLeft = createhitbox(0, 0, "left");
 		add(buttonLeft);
@@ -48,14 +56,6 @@ class FlxHitbox extends FlxSpriteGroup {
 		buttonRight = createhitbox(960, 0, "right");
 		add(buttonRight);
 		hitbox.add(buttonRight);
-
-		var hitbox_hint:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('androidcontrols/hitbox'));
-		hitbox_hint.antialiasing = orgAntialiasing;
-		hitbox_hint.alpha = orgAlpha;
-		hitbox_hint.scrollFactor.set(0, 0);
-		add(hitbox_hint);
-		// garante ordem: hint atrás das hitboxes visuais
-		hitbox_hint.moveBelow(buttonLeft);
 	}
 
 	public function createhitbox(x:Float = 0, y:Float = 0, frames:String) {
