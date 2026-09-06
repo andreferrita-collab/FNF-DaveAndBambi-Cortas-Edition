@@ -15,7 +15,7 @@ import WiggleEffect;
 
 class FreeplayState extends MusicBeatState
 {
-	var songs:Array<String> = ["Tutorial", "Delirium", "Photosynthesis", "Pessimistic", "-- the finale song --", "Taimuresu"];
+	var songs:Array<String> = ["Tutorial", "Delirium", "Photosynthesis", "Pessimistic", "Taimuresu", "Defraud"];
 
 	var selector:FlxText;
 	var curSelected:Int = 0;
@@ -173,7 +173,7 @@ class FreeplayState extends MusicBeatState
 
 		if (accepted)
 		{
-			if (curSelected == 5) throw "Do you think there was a song in that???";
+			//if (curSelected == 5) throw "Do you think there was a song in that???";
 			
 			var poop:String = Highscore.formatSong(
 				songs[curSelected].toLowerCase(),

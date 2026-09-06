@@ -11,11 +11,11 @@ class Main extends Sprite
 		super();
 		ErrorHandler.init();	
 		
-		#if android
+		/*#if android
 		addChild(new FlxGame(1280, 720, flixel.mobile.CopyState));
-		#else
+		#else*/
 		addChild(new FlxGame(1280, 720, TitleState));
-		#end
+		//#end
 
 		addChild(new FPS(10, 3, 0xFFFFFFFF));
 		

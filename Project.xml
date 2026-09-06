@@ -61,13 +61,7 @@
 	<icon path="art/icon.png" />
 	
     <assets path="assets/songs" include="*.ogg" />
-	<android permission="android.permission.INTERNET" />
-<android permission="android.permission.ACCESS_NETWORK_STATE" />
-<android permission="android.permission.READ_EXTERNAL_STORAGE" />
-<android permission="android.permission.WRITE_EXTERNAL_STORAGE" />
-<android permission="android.permission.MANAGE_EXTERNAL_STORAGE" />
-	<!-- _______________________________ Libraries ______________________________ -->
-
+	 
 	<haxelib name="lime" />
 	<haxelib name="openfl" />
 	<haxelib name="flixel" />
@@ -88,6 +82,8 @@
 
 	<!-- Desktop Optimizations -->
 	<haxedef name="FLX_NO_TOUCH" if="desktop" />
+
+	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
 
 	<!-- Disable Debugger on Release -->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
